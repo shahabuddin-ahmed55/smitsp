@@ -1,4 +1,5 @@
 import Navbar from "../components/Navbar";
+import { Link } from "react-router-dom";
 const styleH = {
   color: "white",
   backgroundColor: "DodgerBlue",
@@ -37,6 +38,7 @@ const Welcome = () => {
           beatae maxime maiores minima sequi dolorum, asperiores modi, aperiam,
           magni cupiditate!
         </p>
+        <button><Link to = "../../Signup" >Signup</Link></button>
       </div>
     </div>
   );

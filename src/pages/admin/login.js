@@ -1,40 +1,47 @@
 import React, { useState } from "react";
-import Header from "./components/header";
-import "./style.css";
-
-
+import Header from "../../components/header";
+import { database } from "../../firebase";
+import { ref, push, child, update } from "firebase/database";
+import "../../components/style.css";
 
 const Login = () => {
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setLastName] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [confirmPassword, setConfirmPassword] = useState(null);
 
-    const [firstName, setFirstName] = useState(null);
-    const [lastName, setLastName] = useState(null);
-    const [email, setEmail] = useState(null);
-    const [password,setPassword] = useState(null);
-    const [confirmPassword,setConfirmPassword] = useState(null);
-
-    const handleInputChange = (e) => {
-        const {id , value} = e.target;
-        if(id === "firstName"){
-            setFirstName(value);
-        }
-        if(id === "lastName"){
-            setLastName(value);
-        }
-        if(id === "email"){
-            setEmail(value);
-        }
-        if(id === "password"){
-            setPassword(value);
-        }
-        if(id === "confirmPassword"){
-            setConfirmPassword(value);
-        }
-
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    if (id === "firstName") {
+      setFirstName(value);
     }
-
-    const handleSubmit  = () => {
-        console.log(firstName,lastName,email,password,confirmPassword);
+    if (id === "lastName") {
+      setLastName(value);
     }
+    if (id === "email") {
+      setEmail(value);
+    }
+    if (id === "password") {
+      setPassword(value);
+    }
+    if (id === "confirmPassword") {
+      setConfirmPassword(value);
+    }
+  };
+  const handleSubmit = () => {
+    let obj = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+      confirmPassword: confirmPassword,
+    };
+    const newPostKey = push(child(ref(database), "posts")).key;
+    const updates = {};
+    updates["/" + newPostKey] = obj;
+    return update(ref(database), updates);
+  };
 
   return (
     <div className="App">
@@ -50,6 +57,7 @@ const Login = () => {
               type="text"
               id="firstName"
               placeholder="First Name"
+              onChange = {(e) => handleInputChange(e)}
             />
           </div>
           <div className="lastname">
@@ -62,6 +70,7 @@ const Login = () => {
               id="lastName"
               className="form__input"
               placeholder="LastName"
+              onChange = {(e) => handleInputChange(e)}
             />
           </div>
           <div className="email">
@@ -73,6 +82,7 @@ const Login = () => {
               id="email"
               className="form__input"
               placeholder="Email"
+              onChange = {(e) => handleInputChange(e)}
             />
           </div>
           <div className="password">
@@ -84,6 +94,7 @@ const Login = () => {
               type="password"
               id="password"
               placeholder="Password"
+              onChange = {(e) => handleInputChange(e)}
             />
           </div>
           <div className="confirm-password">
@@ -95,11 +106,12 @@ const Login = () => {
               type="password"
               id="confirmPassword"
               placeholder="Confirm Password"
+              onChange = {(e) => handleInputChange(e)}
             />
           </div>
         </div>
         <div class="footer">
-          <button type="submit" class="btn">
+          <button onClick={()=>handleSubmit()} type="submit" class="btn">
             Register
           </button>
         </div>
